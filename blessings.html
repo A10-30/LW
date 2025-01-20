@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新年祝福</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: url('B.jpg'); /* 替换为实际的背景图片路径 */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            margin: 0;
+            flex-direction: column;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #00796b;
+            opacity: 1;
+            transition: opacity 2s ease-in-out; /* 添加过渡效果 */
+        }
+        .blessing {
+            font-size: 3vw; /* 增大字体 */
+            margin: 10px 0;
+            opacity: 0;
+            position: absolute;
+        }
+        @keyframes flyInFromTop {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        @keyframes flyInFromBottom {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        @keyframes flyInFromLeft {
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        @keyframes flyInFromRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        .vertical-text {
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+        }
+        .firework-button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            bottom: 20px; /* 将按钮放置在底部 */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+        }
+        .firework-button {
+            background-color: #ff4081;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            padding: 1.5vw; /* 缩小按钮的padding */
+            font-size: 2vw; /* 缩小按钮的字体 */
+            cursor: pointer;
+            animation: firework 1s infinite;
+            display: none; /* 初始隐藏按钮 */
+        }
+        @keyframes firework {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="blessing" style="animation: flyInFromTop 2s ease-out forwards; animation-delay: 0s; top: 10%; left: 20%; color: #ff4500; font-family: 'Courier New', Courier, monospace;">祝你新年快乐，万事如意！</div>
+<div class="blessing" style="animation: flyInFromLeft 2s ease-out forwards; animation-delay: 1s; bottom: 10%; right: 20%; color: #32cd32; font-family: 'Georgia', serif;">愿你在新的一年里健康幸福！</div>
+<div class="blessing" style="animation: flyInFromRight 2s ease-out forwards; animation-delay: 2s; top: 30%; left: 10%; color: #1e90ff; font-family: 'Arial', sans-serif;">新年新气象，心想事成！</div>
+<div class="blessing" style="animation: flyInFromBottom 2s ease-out forwards; animation-delay: 3s; bottom: 30%; right: 13%; color: #ff69b4; font-family: 'Verdana', sans-serif;">愿你新年财源滚滚，事业有成！</div>
+<div class="blessing" style="animation: flyInFromLeft 2s ease-out forwards; animation-delay: 4s; top: 50%; left: 25%; color: #00ced1; font-family: 'Tahoma', sans-serif;">祝你新年快乐，阖家幸福！</div>
+<div class="blessing" style="animation: flyInFromRight 2s ease-out forwards; animation-delay: 5s; bottom: 50%; right: 25%; color: #ffa500; font-family: 'Impact', sans-serif;">愿你新年好运连连，心想事成！</div>
+<div class="blessing vertical-text" style="animation: flyInFromTop 2s ease-out forwards; animation-delay: 6s; top: 60%; left: 5%; color: #9400d3; font-family: 'Comic Sans MS', cursive, sans-serif;">新年新开始，愿你一切顺利！</div>
+<div class="blessing vertical-text" style="animation: flyInFromBottom 2s ease-out forwards; animation-delay: 7s; top: 60%; right: 5%; color: #20b2aa; font-family: 'Lucida Console', Monaco, monospace;">祝你新年快乐，幸福安康！</div>
+<div class="blessing" style="animation: flyInFromLeft 2s ease-out forwards; animation-delay: 8s; top: 70%; left: 30%; color: #00ced1; font-family: 'Times New Roman', Times, serif;">愿你新年大吉大利，万事如意！</div>
+<div class="blessing" style="animation: flyInFromRight 2s ease-out forwards; animation-delay: 9s; bottom: 70%; right: 30%; color: #fff; font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;">新年新希望，愿你梦想成真！</div>
+    <div class="firework-button-container">
+        <button class="firework-button" id="fireworkButton" onclick="redirect()">点开</button>
+    </div>
+    <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const particles = [];
+        const colors = ['#ff5252', '#ff4081', '#e040fb', '#7c4dff', '#536dfe', '#448aff', '#18ffff', '#64ffda', '#69f0ae', '#b2ff59'];
+
+        // 粒子类
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.z = Math.random() * 100;
+                this.color = color;
+                this.size = Math.random() * 5 + 1;
+                this.speedX = Math.random() * 3 - 1.5;
+                this.speedY = Math.random() * 3 - 1.5;
+                this.speedZ = Math.random() * 2 - 1;
+            }
+
+            // 更新粒子位置和大小
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.z += this.speedZ;
+                if (this.size > 0.2) this.size -= 0.1;
+            }
+
+            // 绘制粒子
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.fillRect(this.x, this.y, this.size, this.size);
+            }
+        }
+
+        // 创建粒子
+        function createParticles() {
+            for (let i = 0; i < 100; i++) {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                particles.push(new Particle(x, y, color));
+            }
+        }
+
+        // 动画函数
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((particle, index) => {
+                particle.update();
+                particle.draw();
+                if (particle.size <= 0.2) {
+                    particles.splice(index, 1);
+                }
+            });
+            if (particles.length < 100) {
+                createParticles();
+            }
+            requestAnimationFrame(animate);
+        }
+
+        // 重定向函数
+        function redirect() {
+            document.body.style.opacity = 0; // 开始淡出效果
+            setTimeout(() => {
+                window.location.href = 'newpage.html';
+            }, 2000); // 2秒后重定向
+        }
+
+        // 在所有祝福语显示完毕后显示惊喜按钮
+        setTimeout(() => {
+            document.getElementById('fireworkButton').style.display = 'block';
+        }, 11000); // 11秒后显示按钮
+
+        // 在所有祝福语显示完毕后重定向到 newpage.html
+        setTimeout(() => {
+            redirect();
+        }, 20000); // 20秒后开始淡出效果
+
+        createParticles();
+        animate();
+    </script>
+</body>
+</html>
